@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import axios from 'axios';
 import {FaRegUser} from "react-icons/fa";
 import {BsKey} from "react-icons/bs";
 import {AiOutlineMail} from "react-icons/ai";
 import {RegisterInterface} from "../Interfaces/RegisterInterface";
 
 function Register() {
+    const navigate = useNavigate();
 
     const [register, setRegister] = useState<RegisterInterface>({
         username: '',
@@ -24,7 +27,7 @@ function Register() {
         let usernameError = "";
         let passwordError = "";
 
-        if(register.password.length <= 6) {
+        if (register.password.length <= 6) {
             passwordError = 'Password should be longer than 6 characters';
         }
 
@@ -57,7 +60,15 @@ function Register() {
         e.preventDefault();
         const isValid : boolean = validate();
         if (isValid) {
-            console.log(register)
+            axios.post<RegisterInterface>("http://localhost:3002/signup",
+                {
+                    username: register.username,
+                    password: register.password,
+                    email: register.email
+                }
+            ).then(response => {
+                navigate('/', { state: {...response.data} });
+            })
             setRegister({...register, username : '', email : '', password : '', passwordError : '',
                 emailError : '', usernameError : ''});
         }
