@@ -3,4 +3,5 @@ export interface LoginInterface {
     password: string,
     usernameError: string,
     passwordError: string,
+    auth: boolean,
 }

@@ -1,16 +1,20 @@
 import React, {useState} from 'react';
-import { Link } from 'react-router-dom';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {FaRegUser} from 'react-icons/fa';
 import {BsKey} from 'react-icons/bs';
-import { LoginInterface } from '../Interfaces/LoginInterface';
+import {LoginInterface} from '../Interfaces/LoginInterface';
+import axios from 'axios';
 
 function Login() {
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const [login, setLogin] = useState<LoginInterface>({
-        username: '',
+        username: location.state === null ? '' : location.state.username,
         password: '',
         usernameError: '',
         passwordError: '',
+        auth: false,
     })
 
     const handleChange = (e : React.ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +48,16 @@ function Login() {
         e.preventDefault();
         const isValid : boolean = validate();
         if (isValid) {
-            console.log(login);
+            axios.post<LoginInterface>("http://localhost:3002/login",
+                {
+                    username: login.username,
+                    password: login.password
+                }
+                ).then(response => {
+                    if (response.data.auth) {
+                        navigate('/profile', {state: login});
+                    }
+            })
             setLogin({...login, username : '', password : '',
                 usernameError : '', passwordError : ''});
         }
