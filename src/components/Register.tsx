@@ -1,9 +1,68 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {FaRegUser} from "react-icons/fa";
 import {BsKey} from "react-icons/bs";
 import {AiOutlineMail} from "react-icons/ai";
+import {RegisterInterface} from "../Interfaces/RegisterInterface";
 
 function Register() {
+
+    const [register, setRegister] = useState<RegisterInterface>({
+        username: '',
+        email: '',
+        password: '',
+        usernameError: '',
+        emailError: '',
+        passwordError: '',
+    })
+
+    const handleChange = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setRegister({...register, [e.target.name] : e.target.value});
+    }
+
+    const validate = () => {
+        let emailError = "";
+        let usernameError = "";
+        let passwordError = "";
+
+        if(register.password.length <= 6) {
+            passwordError = 'Password should be longer than 6 characters';
+        }
+
+        if (!register.username) {
+            usernameError = 'name cannot be empty';
+        }
+
+        if (!register.email.includes('@')) {
+            emailError = 'invalid Email';
+        }
+
+        if (emailError) {
+            setRegister({...register, emailError : emailError});
+            return false;
+        }
+
+        if (usernameError) {
+            setRegister({...register, usernameError : usernameError});
+            return false;
+        }
+
+        if (passwordError) {
+            setRegister({...register, passwordError: passwordError});
+            return false;
+        }
+        return true;
+    }
+
+    const handleSubmit = (e : React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const isValid : boolean = validate();
+        if (isValid) {
+            console.log(register)
+            setRegister({...register, username : '', email : '', password : '', passwordError : '',
+                emailError : '', usernameError : ''});
+        }
+    }
+
     return (
         <div className="sm:w-1/3 w-3/4 h-1/2 ml-auto mr-auto mt-24">
             <div className="w-full flex justify-center">
@@ -12,7 +71,7 @@ function Register() {
                 </h1>
             </div>
             <div className="w-full flex flex-col justify-center items-center pt-4">
-                <form className="sm:w-1/2 w-full">
+                <form onSubmit={handleSubmit} className="sm:w-1/2 w-full">
                     <div className="mt-6 border-b border-gray-400">
                         <label className="text-sm font-semibold">
                             Username
@@ -21,9 +80,15 @@ function Register() {
                             <FaRegUser className="text-gray-400" />
                             <input
                                 className="w-full p-3"
+                                type="text"
                                 name="username"
                                 placeholder="Type your username"
+                                value={register.username}
+                                onChange={handleChange}
                             />
+                            <div className="text-red-600">
+                                {register.usernameError}
+                            </div>
                         </div>
                     </div>
                     <div className="mt-4 border-b border-gray-400">
@@ -34,9 +99,15 @@ function Register() {
                             <BsKey className="text-gray-400" />
                             <input
                                 className="w-full p-3"
+                                type="password"
                                 name="password"
                                 placeholder="Type your password"
+                                value={register.password}
+                                onChange={handleChange}
                             />
+                            <div className="text-red-600">
+                                {register.passwordError}
+                            </div>
                         </div>
                     </div>
                     <div className="mt-6 border-b border-gray-400">
@@ -48,13 +119,18 @@ function Register() {
                             <input
                                 className="w-full p-3"
                                 type="email"
-                                name="username"
+                                name="email"
                                 placeholder="Type your email"
+                                value={register.email}
+                                onChange={handleChange}
                             />
+                            <div className="text-red-600">
+                                {register.emailError}
+                            </div>
                         </div>
                     </div>
                     <div className="w-full flex flex-col mt-6 text-white">
-                        <button className="bg-indigo-800 p-2">
+                        <button type="submit" className="bg-indigo-800 p-2">
                             Sign Up
                         </button>
                     </div>
