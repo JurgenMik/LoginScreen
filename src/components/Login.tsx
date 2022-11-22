@@ -57,7 +57,9 @@ function Login() {
                     if (response.data.auth) {
                         navigate('/profile', {state: login});
                     }
-            })
+            }).catch(error => {
+                    console.log(error);
+                })
             setLogin({...login, username : '', password : '',
                 usernameError : '', passwordError : ''});
         }
