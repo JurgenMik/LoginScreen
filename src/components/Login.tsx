@@ -1,8 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {FaRegUser} from 'react-icons/fa';
 import {BsKey} from 'react-icons/bs';
 import {LoginInterface} from '../Interfaces/LoginInterface';
+import {GoogleLogin} from 'react-google-login';
+import { gapi } from 'gapi-script';
 import axios from 'axios';
 
 function Login() {
@@ -65,6 +67,25 @@ function Login() {
         }
     }
 
+    useEffect(() => {
+        function start() {
+            gapi.auth2.init({
+                client_id: "788095627297-76sbntleike1lrksq5kc0n3qmim9mcd0.apps.googleusercontent.com",
+                scope: ""
+            });
+        }
+
+        gapi.load('client:auth2', start);
+    }, [])
+
+    const handleGoogleFailure = (res : any) => {
+        console.log(`Failed to .auth with the google api: ${res}`);
+    }
+
+    const handleGoogleSuccess = (res : any) => {
+        navigate('/google-login/profile', {state: res.profileObj});
+    }
+
     return (
         <div className="sm:w-1/3 w-3/4 h-1/2 ml-auto mr-auto mt-24">
             <div className="w-full flex justify-center">
@@ -119,6 +140,14 @@ function Login() {
                         <Link to="/register" className="bg-indigo-800 p-2 text-center mt-6">
                             Register
                         </Link>
+                        <GoogleLogin
+                            className="mt-6"
+                            clientId="788095627297-76sbntleike1lrksq5kc0n3qmim9mcd0.apps.googleusercontent.com"
+                            buttonText="Sign in with Google"
+                            onSuccess={handleGoogleSuccess}
+                            onFailure={handleGoogleFailure}
+                            cookiePolicy={'single_host_origin'}
+                        />
                     </div>
                 </form>
             </div>

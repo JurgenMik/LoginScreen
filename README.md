@@ -10,7 +10,7 @@ Login Screen (FrontendMentor Challenge) [Node (express) Server](https://github.c
 * Form validation
 ### Screenshots
 ![image](https://user-images.githubusercontent.com/89903354/196009969-9061b490-15ba-4787-9304-4fcfe38752bd.png)
-![image](https://user-images.githubusercontent.com/89903354/196010005-114d7bd0-dec2-4069-bdf0-01c483232ecc.png)
+![image](https://user-images.githubusercontent.com/89903354/203812872-37ebe068-d058-4b0a-b531-38f495dedf35.png)
 ### Built With
 * <strong>React</strong>
 * <strong>TypeScript</strong>
